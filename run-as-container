@@ -1,6 +1,0 @@
-# Rub the API as a docker container 
-A docker cli client is installed inside this API. This client cli will contact the target docker server to get the information of that server. This is a cleartext TCP communication on port 2375. Which means the docker server should be accessable remotely via the 2375 port.
-
-Folloeing steps can be followed to expose the the docker demone on port 2375 
-
-Edit/create the file `/etc/docker/daemon.json` 
