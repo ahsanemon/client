@@ -9,11 +9,11 @@ Edit/create the file `/etc/docker/daemon.json`
 {
 "metrics-addr" : "0.0.0.0:9323",
 "experimental" : true,
-"hosts" : "tcp://0.0.0.0:2376" 
+"hosts": [ "unix:///var/run/docker.sock", "tcp://0.0.0.0:2375" ]
 }
 ```
 
-This will expose the metrics of the docker server on `9323` and it will listens for traffic routed to all the IP of it's interface(s) on port `2376`. 
+This will expose the metrics of the docker server on `9323` and you can connect to docker host locally by socket file and remotely by listening port `2375`. 
 
 Please note: Anybody who can reach the docker server, will be able to access the docker daemon without any authentication as TLS is not activated here.
 
@@ -25,6 +25,18 @@ To work around this problem, create a new file `/etc/systemd/system/docker.servi
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd
+```
+Restart the docker and verify the listening port of docker on Ubuntu
+
+`service docker restart`
+
+`systemctl daemon-reload`
+
+```
+[ubuntu@localhost ~]# sudo netstat -ntlp | grep dockerd
+tcp6       0      0 :::2375                 :::*                    LISTEN      1382/dockerd        
+tcp6       0      0 :::9323                 :::*                    LISTEN      1382/dockerd
+
 ```
 
 More detail can be found [here](https://docs.docker.com/config/daemon/#configure-the-docker-daemon "Docker Doc").
